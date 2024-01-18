@@ -69,6 +69,9 @@ whit_db = Chroma.from_texts(loaded_data,embeddings)
 whit_retriever = whit_db.as_retriever(search_type="similarity",search_kwargs={"k":2})
 #test Query
 query = " How do I contact a member of my care team?"
+def get_best(query):
+  return whit_retriever.get_relevant_documents(query)
+
 # Response function
 def get_response(query):
   qa = RetrievalQA.from_chain_type(
@@ -88,7 +91,7 @@ def testtbot(input_text):
     use {query} as context in answering the questions.Be helpful and professional.".format(query=get_response(input_text)))])
     return response.content
 def chatbot(input_text):
-    context = get_response(input_text)
+    context = get_best(input_text)
     #print(f"Input text: {input_text}")
     #print(f"Context: {context}")
 
@@ -101,4 +104,4 @@ iface = gr.Interface(fn=chatbot,
                      inputs=gr.components.Textbox(lines=7, label="Enter your text"),
                      outputs="text",
                      title="WSHC Assistant")
-iface.launch(share=False,server_name="0.0.0.0", server_port=7860)
+iface.launch(share=False,server_name="0.0.0.0", server_port=7860)s
