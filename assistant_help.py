@@ -45,15 +45,6 @@ if loaded_data:
     # Process the loaded data as needed
     print("Data successfully loaded.")
 
-    # Chunk the loaded data (assuming chunk size is 100 characters)
-    #chunk_size = 1000
-    #for document in loaded_data:
-
-     #   chunks = TextLoader.chunk_data(document, chunk_size)
-      #  for chunk in chunks:
-            # Process each chunk as needed
-       #     print("Processing chunk:", chunk)
-
 else:
     print("No data loaded.")
 
@@ -66,37 +57,16 @@ chunks = [TextLoader.chunk_data(document, 1000) for document in loaded_data]
 # Create vector db
 whit_db = Chroma.from_texts(loaded_data,embeddings)
 #create an access to the db to access the  vector ,index
-whit_retriever = whit_db.as_retriever(search_type="similarity",search_kwargs={"k":2})
-#test Query
-query = " How do I contact a member of my care team?"
+whit_retriever = whit_db.as_retriever(search_type="similarity",search_kwargs={"k":1})
+
 def get_best(query):
   return whit_retriever.get_relevant_documents(query)
 
-# Response function
-def get_response(query):
-  qa = RetrievalQA.from_chain_type(
-    llm=OpenAI(openai_api_key=api_key), chain_type="map_reduce", retriever=whit_retriever, return_source_documents=True)
-  #response = qa({'query':query})
-  docs_score = whit_db.similarity_search_with_score(query=query, k = 3)
-  response = qa({'query':query})
-  whit_output = response['result']
-  return whit_output#response['result']
 
-def testtbot(input_text):
-    response = chat([HumanMessage(content="As a WSHC Assistant, my main goal is to provide exceptional customer service and \
-    assist with any inquiries or concerns regarding the facility. I have been extensively trained by WSHC engineers and have\
-     access to detailed information about the facility. With a dedication to customer satisfaction, commitment to quality\
-      care, and emphasis on community partnership, I am here to help. Please feel free to ask any questions you may have,\
-       and I will do my best to assist you in a helpful and professional manner.\
-    use {query} as context in answering the questions.Be helpful and professional.".format(query=get_response(input_text)))])
-    return response.content
 def chatbot(input_text):
     context = get_best(input_text)
-    #print(f"Input text: {input_text}")s
-    #print(f"Context: {context}")
-
     response = chat([HumanMessage(content="{query}".format(query=context))])
-    #print(f"Chat response: {response.content}")
+  
 
     return response.content
 
