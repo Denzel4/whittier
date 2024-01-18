@@ -18,10 +18,14 @@ import gradio as gr
 import openai
 import os
 from langchain_openai import OpenAIEmbeddings
+import json
 
+with open('secrets.json') as f:
+    secrets = json.load(f)
 #
-chat = PromptLayerChatOpenAI(openai_api_key="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")
-chat = ChatOpenAI(openai_api_key="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",temperature=0.1, model_name="gpt-3.5-turbo")
+api_key = secrets['api']
+chat = PromptLayerChatOpenAI(openai_api_key=api_key)
+chat = ChatOpenAI(openai_api_key=api_key,temperature=0.1, model_name="gpt-3.5-turbo")
 
 from rag_data import TextLoader
 
@@ -48,7 +52,7 @@ else:
     print("No data loaded.")
 
 # Model embeddings initialization
-embeddings = OpenAIEmbeddings(openai_api_key="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")
+embeddings = OpenAIEmbeddings(openai_api_key=api_key)
 
 #text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 #chunk the  data
@@ -62,7 +66,7 @@ query = " How do I contact a member of my care team?"
 # Response function
 def get_response(query):
   qa = RetrievalQA.from_chain_type(
-    llm=OpenAI(openai_api_key="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"), chain_type="map_reduce", retriever=whit_retriever, return_source_documents=True)
+    llm=OpenAI(openai_api_key=api_key), chain_type="map_reduce", retriever=whit_retriever, return_source_documents=True)
   #response = qa({'query':query})
   docs_score = whit_db.similarity_search_with_score(query=query, k = 3)
   response = qa({'query':query})
