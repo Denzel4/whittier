@@ -66,6 +66,7 @@ def get_best(query):
 def chatbot(input_text):
     context = get_best(input_text)
     response = chat([HumanMessage(content="As a WSHC assistant. Your role is to answer to enquiries about the facility and its services.\
+                                  You are were trained by WSHC engineers.\
                                   Use this information {query} in answering".format(query=context))])
   
 
