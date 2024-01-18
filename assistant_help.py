@@ -92,7 +92,7 @@ def testtbot(input_text):
     return response.content
 def chatbot(input_text):
     context = get_best(input_text)
-    #print(f"Input text: {input_text}")
+    #print(f"Input text: {input_text}")s
     #print(f"Context: {context}")
 
     response = chat([HumanMessage(content="{query}".format(query=context))])
@@ -104,4 +104,4 @@ iface = gr.Interface(fn=chatbot,
                      inputs=gr.components.Textbox(lines=7, label="Enter your text"),
                      outputs="text",
                      title="WSHC Assistant")
-iface.launch(share=False,server_name="0.0.0.0", server_port=7860)s
+iface.launch(share=False,server_name="0.0.0.0", server_port=7860)
