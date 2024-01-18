@@ -28,7 +28,7 @@ with open('secrets.json') as f:
 #
 api_key = secrets['api']
 chat = PromptLayerChatOpenAI(openai_api_key=api_key)
-chat = ChatOpenAI(openai_api_key=api_key,temperature=0.1, model_name="gpt-3.5-turbo")
+chat = ChatOpenAI(openai_api_key=api_key,temperature=0.1, model_name="gpt-4")
 
 from rag_data import TextLoader
 
@@ -96,7 +96,7 @@ def chatbot(input_text):
     #print(f"Context: {context}")
 
     response = chat([HumanMessage(content="{query}".format(query=context))])
-    print(f"Chat response: {response.content}")
+    #print(f"Chat response: {response.content}")
 
     return response.content
 
