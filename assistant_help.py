@@ -29,7 +29,10 @@ chat = ChatOpenAI(openai_api_key=api_key,temperature=0.1, model_name="gpt-3.5-tu
 
 from rag_data import TextLoader
 
-file_path = '/home/cicero/wshc/whittier/data'
+file_path = 'data'
+#data/contact.txt
+#file_path ='https://raw.githubusercontent.com/Denzel4/whittier/main/data/contact.txt?token=GHSAT0AAAAAACMVVH47UKX7WBF2DJ2VEZ3UZNJAKVA'
+#/home/cicero/wshc/whittier/data
 text_file_paths = [os.path.join(file_path, path) for path in os.listdir(file_path)]
 
 text_loader = TextLoader(text_file_paths)
