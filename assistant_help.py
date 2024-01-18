@@ -101,4 +101,4 @@ iface = gr.Interface(fn=chatbot,
                      inputs=gr.components.Textbox(lines=7, label="Enter your text"),
                      outputs="text",
                      title="WSHC Assistant")
-iface.launch(share=True,debug=True)
+iface.launch(share=False,server_name="0.0.0.0", server_port=7860)
