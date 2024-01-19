@@ -28,7 +28,7 @@ with open('secrets.json') as f:
 #
 api_key = secrets['api']
 chat = PromptLayerChatOpenAI(openai_api_key=api_key)
-chat = ChatOpenAI(openai_api_key=api_key,temperature=0.0, model_name="gpt-4-turbo")
+chat = ChatOpenAI(openai_api_key=api_key,temperature=0.0, model_name="gpt-4")
 
 from rag_data import TextLoader
 
