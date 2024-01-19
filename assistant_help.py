@@ -63,14 +63,20 @@ def get_best(query):
   return whit_retriever.get_relevant_documents(query)
 
 
-def chatbot(input_text):
-    context = get_best(input_text)
-    response = chat([HumanMessage(content="As a WSHC assistant. Your role is to answer to enquiries about the facility and its services.\
-                                  You are were trained by WSHC engineers.\
-                                  Use this information {query} in answering".format(query=context))])
+#def chatbot(input_text):
+ #   context = get_best(input_text)
+  #  response = chat([HumanMessage(content="As a WSHC assistant. Your role is to answer to enquiries about the facility and its services.\
+   #                               You are were trained by WSHC engineers.\
+    #                              Use this information {query} in answering".format(query=context))])
   
 
-    return response.content
+    #return response.content
+def chatbot(input_text):
+    context = get_best(input_text)
+    response = chat([{"content": f"As a WSHC assistant, your role is to answer inquiries about the facility and its services. "
+                                  f"You were trained by WSHC engineers. Use this information: {context}"}])
+
+    return response[0]["content"]
 
 iface = gr.Interface(fn=chatbot,
                      inputs=gr.components.Textbox(lines=7, label="Enter your text"),
