@@ -16,7 +16,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.chat_models import PromptLayerChatOpenAI
 from langchain_community.chat_models import ChatOpenAI
 from langchain_openai import ChatOpenAI
-from langchain.schema import HumanMessage
+from langchain.schema import HumanMessage, SystemMessage
 import gradio as gr
 import openai
 import os
@@ -57,10 +57,10 @@ chunks = [TextLoader.chunk_data(document, 1000) for document in loaded_data]
 # Create vector db
 whit_db = Chroma.from_texts(loaded_data,embeddings)
 #create an access to the db to access the  vector ,index
-whit_retriever = whit_db.as_retriever(search_type="similarity",search_kwargs={"k":1})
+whit_retriever = whit_db.as_retriever(search_type="mmr",search_kwargs={"k":3})#(search_type="similarity",search_kwargs={"k":1})
 
 def get_best(query):
-  return whit_retriever.get_relevant_documents(query)
+  return whit_retriever.get_relevant_documents(query,k=1)
 
 
 #def chatbot(input_text):
@@ -73,10 +73,15 @@ def get_best(query):
     #return response.content
 def chatbot(input_text):
     context = get_best(input_text)
-    response = chat([{"content": f"As a WSHC assistant, your role is to answer inquiries about the facility and its services. "
-                                  f"You were trained by WSHC engineers. Use this information: {context}"}])
+    response = chat(messages=[SystemMessage(
+        
+         content= "As a WSHC assistant, your role is to answer inquiries about the facility and its services.\
+                                  You were trained by WSHC engineers. Use this information: {info} ".format(info=context)),
+                              HumanMessage(
+                                  
+                                  content="Answer this question: {question} based on the following provided information :{info} ".format(question=input_text,info=context)),])
 
-    return response[0]["content"]
+    return response.content
 
 iface = gr.Interface(fn=chatbot,
                      inputs=gr.components.Textbox(lines=7, label="Enter your text"),
